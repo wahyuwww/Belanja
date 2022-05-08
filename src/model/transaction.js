@@ -30,7 +30,7 @@ const modelTransaction = {
   },
   getTransactionsById: (id) => {
     return db.query(
-      'SELECT transactions.transaction_status, transactions.shipping_price, transactions.total_price, users.name as name_user, transactions.quantity, transactions.payment, products.name AS products_name, products.size   FROM transactions INNER JOIN products ON transactions.id = products.id INNER JOIN users ON products.iduser = users.id where transactions.id = $1',
+      'SELECT transactions.transaction_status, transactions.shipping_price, transactions.total_price, users.name as name_user, transactions.quantity, transactions.payment, products.name AS products_name, products.size FROM transactions INNER JOIN products ON transactions.id = products.id INNER JOIN users ON products.iduser = users.id where transactions.id = $1',
       [id]
     )
   },
@@ -38,12 +38,6 @@ const modelTransaction = {
     return db.query(
       'SELECT * FROM transactions WHERE transaction_status LIKE $1',
       ['%' + search + '%']
-    )
-  },
-  transactionsDetail: (id) => {
-    return db.query(
-      'SELECT users.name as name_user, users.address as address_user , products.name,transactions.transaction_status AS status , transactions.total_price, transactions.shipping_price, transactions.payment, transactions.quantity FROM transactions INNER JOIN products ON transactions.id = products.id INNER JOIN users ON transactions.id_user = users.id where transactions.id = $1',
-      [id]
     )
   },
   insert: (body) => {
@@ -131,7 +125,7 @@ const modelTransaction = {
     return new Promise((resolve, reject) => {
       // resolve(body)
       const qs =
-        'INSERT INTO address (receipt_name,telephone_number,address,postal_code,city_or_subdistric,user_id) VALUES ($1,$2,$3,$4,$5,$6)'
+        'UPDATE address SET receipt_name=$1, telephone_number=$2, address=$3, postal_code=$4, city_or_subdistric=$5 WHERE user_id=$6'
       db.query(
         qs,
         [receipt_name,
@@ -151,6 +145,12 @@ const modelTransaction = {
         }
       )
     })
+  },
+  transactionsDetail: (id) => {
+    return db.query(
+      'SELECT users.name as name_user, users.address as address_user , products.name,transactions.transaction_status AS status , transactions.total_price, transactions.shipping_price, transactions.payment, transactions.quantity FROM transactions INNER JOIN products ON transactions.id = products.id INNER JOIN users ON transactions.id_user = users.id where transactions.id = $1',
+      [id]
+    )
   }
 }
 

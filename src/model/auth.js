@@ -55,6 +55,7 @@ const authModel = {
           if (err) {
             reject(err)
           }
+          // console.log(data)
           if (!data.rows[0].password.length) {
             reject(new Error('password wrong'))
           } else {

@@ -29,35 +29,38 @@ const modelProducts = {
   },
   getProductById: (id) => {
     return db.query(
-      'SELECT products.name,category.name AS name_categori, users.storename AS name_store, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id INNER JOIN users ON products.iduser = users.id WHERE products.id = $1',
+      'SELECT products.name,category.name AS name_categori, users.store_name AS name_store, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id INNER JOIN users ON products.iduser = users.id WHERE products.id = $1',
       [id]
     )
   },
-  ProductByCategory: () => {
-    return db.query(' SELECT products.name,category.name AS name_categori, users.storename AS name_store, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id INNER JOIN users ON products.iduser =users.id')
+  ProductByCategory: (id) => {
+    return db.query(
+      ' SELECT products.name,category.name AS name_categori, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id INNER JOIN users ON products.iduser =users.id where idCategory = $1'
+      , [id])
   },
-  // searchProductsByCategori: (search) => {
-  //   return db.query('SELECT * FROM products WHERE idcategori LIKE $1', [
-  //     '%' + search + '%'
-  //   ])
-  // },
+  searchProductsByCategori: (search) => {
+    return db.query('SELECT * FROM products WHERE name LIKE $1', [
+      '%' + search + '%'
+    ])
+  },
   filterProduct: ({ sort, type, limit, offset }) => {
     return db.query(
       `SELECT name,description,price FROM products ORDER BY ${sort} ${type} LIMIT $1 OFFSET $2`,
       [limit, offset]
     )
   },
-  insert: ({
-    name,
-    description,
-    stock,
-    price,
-    idcategory,
-    image,
-    iduser,
-    size,
-    color
-  }) => {
+  insert: (body) => {
+    const {
+      name,
+      description,
+      stock,
+      price,
+      idcategory,
+      image,
+      iduser,
+      size,
+      color
+    } = body
     return new Promise((resolve, reject) => {
       db.query(
         'INSERT INTO products (name,description,stock,price,idCategory,image,iduser,size,color) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)',

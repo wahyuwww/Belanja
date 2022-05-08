@@ -53,7 +53,7 @@ const categoryContoller = {
       const limit = parseInt(req.query.limit) || 5
       const offset = (page - 1) * limit
       const type = req.query.type
-      console.log(type)
+      // console.log(type)
       const result = await categoryModel.modelCategories.sortByCategori({ type, limit, offset })
       console.log(result)
       res.json({

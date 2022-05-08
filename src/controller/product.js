@@ -73,7 +73,7 @@ const productsContoller = {
   getSearchProducts: (req, res, next) => {
     const search = req.query.search
     console.log(search)
-    productsModel.modelProducts.searchProduct(search)
+    productsModel.modelProducts.searchProductsByCategori(search)
       .then((result) => {
         res.json({
           data: result.rows
@@ -85,7 +85,8 @@ const productsContoller = {
       })
   },
   getProductsByCategori: (req, res, next) => {
-    productsModel.modelProducts.ProductByCategory()
+    const id = req.params.id
+    productsModel.modelProducts.ProductByCategory(id)
       .then((result) => {
         commonHellper.response(res, result.rows, 'data product by categori', 200)
       })

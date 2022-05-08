@@ -178,108 +178,35 @@ const usersController = {
       })
   },
   updateProfil: (req, res, next) => {
-    const { name, email, phonennumber, gender, dateofbrith, image } = req.body
+    const { name, email, gender, dateofbrith, image, address, password, phone_number } = req.body
     const data = {
       name,
       email,
-      phonennumber,
+      address,
+      password,
+      phone_number,
       gender,
       dateofbrith,
       image
     }
     const id = req.params.id
     console.log(id)
-    modelUsers
-      .update({ ...data, id })
-      .then(() => {
-        console.log(data)
-        commonHellper.response(res, data, 'data updated success', 200)
+    bcrypt.genSalt(10, function (_err, salt) {
+      bcrypt.hash(data.password, salt, function (_err, hash) {
+        data.password = hash
+        // console.log(data)
+        modelUsers
+          .update({ ...data, id })
+          .then((result) => {
+            commonHellper.response(res, data, 'data updated success', 200)
+          })
+          .catch((error) => {
+            console.log(error)
+            next(createError)
+          })
       })
-      .catch((error) => {
-        console.log(error)
-        next(createError)
-      })
+    })
   }
-  // register: async (req, res, next) => {
-  //   const {
-  //     email,
-  //     password,
-  //     name,
-  //     phonennumber,
-  //     gender,
-  //     dateofbrith,
-  //     address,
-  //     avatar
-  //   } = req.body
-
-  //   const data = {
-  //     email,
-  //     password,
-  //     name,
-  //     phonennumber,
-  //     gender,
-  //     dateofbrith,
-  //     address,
-  //     avatar,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date()
-  //   }
-
-  //   bcrypt.genSalt(10, function (_err, salt) {
-  //     bcrypt.hash(data.password, salt, function (_err, hash) {
-  //       data.password = hash
-  //       console.log(data)
-  //       modelUsers
-  //         .insert({ ...data })
-  //         .then(() => {
-  //           commonHellper.response(res, data, 'data added successfully', 201)
-  //         })
-  //         .catch((error) => {
-  //           console.log(error)
-  //           next(createError)
-  //         })
-  //     })
-  //   })
-  // },
-  // login: (req, res, next) => {
-  //   const { email, password } = req.body
-  //   modelUsers
-  //     .getUserbyEmail(email)
-  //     .then((result) => {
-  //       if (result.rows[0].email.length < 1) {
-  //         return commonHellper.response(res, 'email failed', 200)
-  //       }
-  //       const user = result.rows[0]
-  //       const hash = user.password
-
-  //       bcrypt.compare(password, hash).then((resCompare) => {
-  //         console.log(hash)
-  //         if (!resCompare) {
-  //           return res.status(201).json({
-  //             msg: 'password failed'
-  //           })
-  //         }
-  //         const payload = {
-  //           id: user.id,
-  //           email: user.email
-  //         }
-  //         jwt.sign(
-  //           payload,
-  //           process.env.SECRET_KEY,
-  //           { expiresIn: 60 * 60 },
-  //           (_err, token) => {
-  //             user.token = token
-  //             delete user.password
-  //             res.json({})
-  //           }
-  //         )
-  //       })
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //       next(createError)
-  //     })
-  // }
 }
 
 module.exports = {

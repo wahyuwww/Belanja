@@ -12,5 +12,5 @@ Router
   .delete('/:id', transactionContoller.deleteTransaction)
   .get('/:id', transactionContoller.getTransactionsById)
   .get('/transactionDetail/:id', transactionContoller.getTransactionDetail)
-  .post('/address', transactionContoller.insertAddres)
+  .patch('/address', transactionContoller.insertAddres)
 module.exports = Router

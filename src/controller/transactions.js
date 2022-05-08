@@ -48,6 +48,7 @@ const transactionContoller = {
     try {
       const id = req.params.id
       // console.log(id)
+      console.log(id)
       const result =
         await transactiontsModel.modelTransaction.getTransactionsById(id)
       commonHellper.response(res, result.rows, 'get data success', 200)
