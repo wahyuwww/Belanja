@@ -55,7 +55,7 @@ const authModel = {
           if (err) {
             reject(err)
           }
-          // console.log(data)
+          // console.log(data.rows[0].password.length)
           if (!data.rows[0].password.length) {
             reject(new Error('password wrong'))
           } else {
@@ -64,7 +64,7 @@ const authModel = {
               data.rows[0].password,
               (err, result) => {
                 // console.log(!result)
-                if (!result) {
+                if (result) {
                   const { email } = body
                   const { password, id } = data.rows[0]
                   const payload = {
@@ -80,8 +80,8 @@ const authModel = {
                     token
                   })
                 }
-                if (result) {
-                  reject(new Error('data password failed'))
+                if (!result) {
+                  reject(new Error('data password salah'))
                 }
                 if (err) {
                   reject(err)
