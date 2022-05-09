@@ -3,7 +3,7 @@ const transactiontsModel = require('../model/transaction')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
 
-const transactionContoller = {
+const transactionController = {
   getTransaction: async (req, res, next) => {
     try {
       const page = parseInt(req.query.page || 1)
@@ -145,5 +145,5 @@ const transactionContoller = {
 }
 
 module.exports = {
-  transactionContoller
+  transactionController
 }

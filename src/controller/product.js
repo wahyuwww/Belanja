@@ -2,7 +2,7 @@ const productsModel = require('../model/product')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
 
-const productsContoller = {
+const productsController = {
   getProducts: async (req, res, next) => {
     try {
       const page = parseInt(req.query.page) || 1
@@ -64,21 +64,33 @@ const productsContoller = {
       const page = parseInt(req.query.page) || 1
       const limit = parseInt(req.query.limit) || 5
       const offset = (page - 1) * limit
+      const search = req.query.search
+      console.log(search)
       console.log(type)
       const result = await productsModel.modelProducts.filterProduct({
+        search,
         sort,
         type,
         limit,
         offset
       })
+      const {
+        rows: [count]
+      } = await productsModel.modelProducts.countProducts()
+      const totalData = parseInt(count.total)
+      const totalPage = Math.ceil(totalData / limit)
+      const pagination = {
+        currentPage: page,
+        limit,
+        totalData,
+        totalPage
+      }
       if (result.length === 0) {
         res.json({
           msg: 'data not found'
         })
       }
-      res.json({
-        data: result.rows
-      })
+      commonHellper.response(res, result.rows, 'get filter data success', 200, pagination)
     } catch (error) {
       console.log(error)
       next(createError)
@@ -184,5 +196,5 @@ const productsContoller = {
 }
 
 module.exports = {
-  productsContoller
+  productsController
 }

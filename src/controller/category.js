@@ -2,7 +2,7 @@ const categoryModel = require('../model/categories')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
 
-const categoryContoller = {
+const categoryController = {
   getCategory: async (req, res, next) => {
     try {
       const page = parseInt(req.query.page || 1)
@@ -108,5 +108,5 @@ const categoryContoller = {
 }
 
 module.exports = {
-  categoryContoller
+  categoryController
 }

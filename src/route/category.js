@@ -1,12 +1,12 @@
 const express = require('express')
 const Router = express.Router()
-const categoryContoller = require('../controller/category')
+const { categoryController } = require('../controller/category')
 
-Router.get('/', categoryContoller.categoryContoller.getCategory)
-  .get('/search', categoryContoller.categoryContoller.getSearchCategory)
-  .get('/sort', categoryContoller.categoryContoller.getSortCategory)
-  .post('/', categoryContoller.categoryContoller.insert)
-  .put('/:id', categoryContoller.categoryContoller.update)
-  .delete('/:id', categoryContoller.categoryContoller.deleteCategory)
+Router.get('/', categoryController.getCategory)
+  .get('/search', categoryController.getSearchCategory)
+  .get('/sort', categoryController.getSortCategory)
+  .post('/', categoryController.insert)
+  .put('/:id', categoryController.update)
+  .delete('/:id', categoryController.deleteCategory)
 
 module.exports = Router

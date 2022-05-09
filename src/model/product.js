@@ -43,12 +43,18 @@ const modelProducts = {
       '%' + search + '%'
     ])
   },
-  filterProduct: ({ sort, type, limit, offset }) => {
+  filterProduct: ({ search, sort, type, limit, offset }) => {
     return db.query(
-      `SELECT name,description,price FROM products ORDER BY ${sort} ${type} LIMIT $1 OFFSET $2`,
-      [limit, offset]
+      `SELECT name,description,price FROM products WHERE ${sort} ILIKE $1 ORDER BY ${sort} ${type} LIMIT $2 OFFSET $3`,
+      ['%' + search + '%', limit, offset]
     )
   },
+  // filterProduct: ({ sort, type, limit, offset }) => {
+  //   return db.query(
+  //     `SELECT name,description,price FROM products ORDER BY ${sort} ${type} LIMIT $1 OFFSET $2`,
+  //     [limit, offset]
+  //   )
+  // },
   insert: (body) => {
     const {
       name,
