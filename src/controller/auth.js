@@ -11,6 +11,7 @@ const authController = {
       .loginUser(req.body)
       .then((result) => {
         res.status(200).json({
+          msg: 'berhasil login',
           result
         })
       })

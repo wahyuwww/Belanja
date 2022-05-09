@@ -81,7 +81,7 @@ const authModel = {
                   })
                 }
                 if (result) {
-                  reject(new Error('data password salah'))
+                  reject(new Error('data password failed'))
                 }
                 if (err) {
                   reject(err)

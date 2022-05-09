@@ -104,24 +104,6 @@ const categoryContoller = {
         console.log(error)
         next(createError)
       })
-
-    // const id = req.params.id
-
-    // categoryModel.modelCategories
-    //   .deleteCategory(id)
-    //   .then(() => {
-    //     console.log(res)
-    //     res.status(200).json({
-    //       message: 'data berhasil dihapus',
-    //       id
-    //     })
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //     res.status(500).json({
-    //       message: 'interval error'
-    //     })
-    //   })
   }
 }
 

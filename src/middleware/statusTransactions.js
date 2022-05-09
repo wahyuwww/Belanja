@@ -7,7 +7,7 @@ const validateStatus = (req, res, next) => {
   if (result === 'SUCCESS') {
     return res.json({
       result,
-      mesagge: 'stock tidak boleh kurang 1'
+      mesagge: 'masih belum lunas'
     })
   }
   next()

@@ -16,14 +16,11 @@ const usersRouter = require('./src/route/users')
 const reviewRouter = require('./src/route/review')
 
 app.use(express.json())
+app.use(morgan('dev'))
 app.use(cors())
 app.use(helmet())
-app.use(morgan('dev'))
 app.use(xss())
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => {
-  console.log(`example app listening at http://localhost:${PORT}`)
-})
+app.disable('x-powered-by')
 
 app.use('/category', categoryRouter)
 app.use('/products', productsRouter)
@@ -32,13 +29,17 @@ app.use('/users', usersRouter)
 app.use('/auth', authController)
 app.use('/review', reviewRouter)
 
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+  console.log(`example app listening at http://localhost:${PORT}`)
+})
 app.all('*', (req, res, next) => {
   next(new CreateError.NotFound())
 })
 
 app.use((err, req, res, next) => {
   const messError = err.message || 'internal server error'
-  const statusCode = err.message || 500
+  const statusCode = err.status || 500
 
   res.status(statusCode).json({
     message: messError

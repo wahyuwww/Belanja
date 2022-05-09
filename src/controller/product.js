@@ -22,10 +22,14 @@ const productsContoller = {
         totalData,
         totalPage
       }
-
+      if (result.length === 0) {
+        res.json({
+          msg: 'data not found'
+        })
+      }
       commonHellper.response(res, result, 'get data success', 200, pagination)
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       next(createError)
     }
   },
@@ -34,7 +38,7 @@ const productsContoller = {
       const result = await productsModel.modelProducts.getAllProducts()
       commonHellper.response(res, result, 'get data success', 200)
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       next(createError)
     }
   },
@@ -42,6 +46,11 @@ const productsContoller = {
     try {
       const id = req.params.id
       const result = await productsModel.modelProducts.getProductById(id)
+      if (result.rows.length === 0) {
+        res.json({
+          msg: 'data not found'
+        })
+      }
       commonHellper.response(res, result.rows, 'get data success', 200)
     } catch (error) {
       console.log(error)
@@ -62,6 +71,11 @@ const productsContoller = {
         limit,
         offset
       })
+      if (result.length === 0) {
+        res.json({
+          msg: 'data not found'
+        })
+      }
       res.json({
         data: result.rows
       })
@@ -72,9 +86,14 @@ const productsContoller = {
   },
   getSearchProducts: (req, res, next) => {
     const search = req.query.search
-    console.log(search)
+    // console.log(search)
     productsModel.modelProducts.searchProductsByCategori(search)
       .then((result) => {
+        if (result.rows.length === 0) {
+          res.json({
+            msg: 'data not found'
+          })
+        }
         res.json({
           data: result.rows
         })

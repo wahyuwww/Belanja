@@ -16,12 +16,12 @@ const limits = {
   fileSize: 3 * 1000 * 1000
 }
 const fileFilter = (req, file, cb) => {
-  const fileTypes = /jpg|jpeg|gif|png/
-  const extName = fileTypes.test(path.extname(file.originalname).toLowerCase())
-  if (extName) {
+  const fileTypes = /jpg|jpeg|png/
+  const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
+  if (extname) {
     cb(null, true)
   } else {
-    cb(new Error('Sorry Data Not Found', []))
+    cb(new Error('data not found', []))
   }
 }
 const upload = multer({
@@ -39,8 +39,6 @@ const uploadImg = {
           msg: err
         })
       } else {
-        // req.body.image = `${process.env.URL_LOCAL}images/${req.file.filename}`;
-        // next();
         try {
           req.body.image = req.file.filename
         } catch {
