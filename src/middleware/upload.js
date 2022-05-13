@@ -1,5 +1,7 @@
+const createHttpError = require('http-errors')
 const multer = require('multer')
 const path = require('path')
+const commonHellper = require('../helpers/common')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -13,15 +15,21 @@ const storage = multer.diskStorage({
   }
 })
 const limits = {
-  fileSize: 3 * 1000 * 1000
+  fileSize: 2 * 1000 * 1000
 }
+
 const fileFilter = (req, file, cb) => {
   const fileTypes = /jpg|jpeg|png/
   const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
   if (extname) {
     cb(null, true)
   } else {
-    cb(new Error('data not found', []))
+    return cb(createHttpError('File extension must be PNG or JPG'), false)
+  }
+  const limits = parseInt(req.headers['content-length'])
+  console.log(limits)
+  if (limits > 2 * 1000 * 1000) {
+    cb(createHttpError('sorry data max 2 Mb'))
   }
 }
 const upload = multer({
@@ -36,13 +44,14 @@ const uploadImg = {
     singleUpload(req, res, (err) => {
       if (err) {
         res.json({
-          msg: err
+          msg: err.message
         })
       } else {
         try {
           req.body.image = req.file.filename
         } catch {
           console.log(err)
+          return commonHellper.response(res, null, err.message, 400)
         } finally {
           next()
         }
@@ -54,7 +63,7 @@ const uploadImg = {
     multipleUpload(req, res, (err) => {
       if (err) {
         res.json({
-          msg: err
+          msg: err.message
         })
       } else {
         try {
@@ -65,6 +74,7 @@ const uploadImg = {
           // console.log(req.files.filename)
         } catch {
           console.log(err)
+          return commonHellper.response(res, null, err.message, 400)
         } finally {
           next()
         }

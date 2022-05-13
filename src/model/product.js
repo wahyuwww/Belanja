@@ -29,9 +29,13 @@ const modelProducts = {
   },
   getProductById: (id) => {
     return db.query(
-      'SELECT products.name,category.name AS name_categori, users.store_name AS name_store, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id INNER JOIN users ON products.iduser = users.id WHERE products.id = $1',
+      'SELECT products.name,category.name AS name_categori, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id WHERE products.id = $1',
       [id]
     )
+    // return db.query(
+    //   'SELECT products.name,category.name AS name_categori, users.store_name AS name_store, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id INNER JOIN users ON products.iduser = users.id WHERE products.id = $1',
+    //   [id]
+    // )
   },
   ProductByCategory: (id) => {
     return db.query(

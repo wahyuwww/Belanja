@@ -3,15 +3,17 @@ const Router = express.Router()
 const uploadImg = require('../middleware/upload')
 const { productsController } = require('../controller/product')
 const validate = require('../middleware/validate')
+const { protect, isAdmin } = require('../middleware/auth')
+// const {
+//   hitCacheDetailProduct,
+//   ClearCahceProducts
+// } = require('../middleware/redis')
 
-Router.get('/', productsController.getProducts)
-  .get('/AllProduct', productsController.getAllProducts)
+Router.get('/', protect, isAdmin, productsController.getProducts)
+  .get('/AllProduct', protect, isAdmin, productsController.getAllProducts)
   .get('/filter', productsController.getProductByFilter)
   // .get('/search', productsContoller.productsContoller.getSearchProducts)
-  .get(
-    '/category/:id',
-    productsController.getProductsByCategori
-  )
+  .get('/category/:id', productsController.getProductsByCategori)
   .get('/:id', productsController.getProductById)
   .post(
     '/',

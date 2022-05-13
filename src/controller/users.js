@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const { modelUsers } = require('../model/users')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
-// const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 const usersController = {
   getUsers: async (req, res, next) => {
@@ -178,19 +178,28 @@ const usersController = {
       })
   },
   updateProfil: (req, res, next) => {
-    const { name, email, gender, dateofbrith, image, address, password, phone_number } = req.body
+    const {
+      name,
+      email,
+      gender,
+      dateofbrith,
+      image,
+      address,
+      password,
+      phonenumber
+    } = req.body
     const data = {
       name,
       email,
       address,
       password,
-      phone_number,
+      phonenumber,
       gender,
       dateofbrith,
       image
     }
     const id = req.params.id
-    console.log(id)
+    console.log(data)
     bcrypt.genSalt(10, function (_err, salt) {
       bcrypt.hash(data.password, salt, function (_err, hash) {
         data.password = hash
@@ -206,6 +215,12 @@ const usersController = {
           })
       })
     })
+  },
+  verifyEmail: (req, res, next, email) => {
+    const token = jwt.sign({ email }, process.env.SECRET_KEY, {
+      expiresIn: '24h'
+    })
+    console.log(token)
   }
 }
 

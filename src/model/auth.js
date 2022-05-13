@@ -4,11 +4,42 @@ const jwt = require('jsonwebtoken')
 const db = require('../config/db')
 
 const authModel = {
+  FindEmail: (email) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT * FROM users WHERE email = $1',
+        [email],
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error('data error'))
+          }
+        }
+      )
+    })
+  },
+  create: ({ id, name, password, email, role = 'users', phone_number }) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'INSERT INTO users (id, name, password, email,role,phonenumber) VALUES ($1,$2,$3,$4,$5,$6)',
+        [id, name, password, email, role, phone_number],
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error('data error disini'))
+          }
+        }
+      )
+    })
+  },
   postNewUser: (body) => {
     return new Promise((resolve, reject) => {
       const qs = 'SELECT email FROM users WHERE email = $1'
       db.query(qs, [body.email], (_err, data) => {
-        if (data.length) {
+        console.log()
+        if (!data.rowCount.length) {
           reject(new Error('account is ready'))
         } else {
           bcrypt.genSalt(10, (err, salt) => {
@@ -16,7 +47,7 @@ const authModel = {
               reject(err)
             }
             const { name, password, email, phone_number } = body
-            console.log(name)
+            // console.log(name)
             bcrypt.hash(password, salt, (err, hashedPassword) => {
               if (err) {
                 reject(err)
@@ -92,6 +123,28 @@ const authModel = {
         }
       )
     })
+  },
+  sendEmail: (body) => {
+    return new Promise((resolve, reject) => {
+      const queryString = 'SELECT id, email FROM users WHERE email = $1'
+      db.query(queryString, [body.email], (err, data) => {
+        if (err) {
+          reject(err)
+        }
+        console.log(data.rows[0].id)
+        if (data.rows.length) {
+          const link = `http://localhost:4000/v1/auth/activasi/${data.rows[0].id}`
+          resolve({ email: data.rows[0].email, link })
+        } else {
+          reject(err)
+        }
+      })
+    })
+  },
+  activasi: (id) => {
+    return db.query('SELECT * FROM users WHERE id = $1', [
+      id
+    ])
   }
 }
 

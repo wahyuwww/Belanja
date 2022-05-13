@@ -87,26 +87,11 @@ const modelUsers = {
     })
   },
   updateProfil: (body) => {
-    const {
-      name,
-      email,
-      phone_number,
-      gender,
-      image,
-      date_of_brith,
-      id
-    } = body
+    const { name, email, phonenumber, gender, image, date_of_brith, id } = body
     return new Promise((resolve, reject) => {
       db.query(
-        'UPDATE users SET name = $1, email = $2, phone_number = $3, gender = $4, image = $5,  date_of_brith = $6 WHERE id=$7',
-        [
-          name,
-          email,
-          phone_number,
-          gender,
-          image,
-          date_of_brith,
-          id],
+        'UPDATE users SET name = $1, email = $2, phonenumber = $3, gender = $4, image = $5,  date_of_brith = $6 WHERE id=$7',
+        [name, email, phonenumber, gender, image, date_of_brith, id],
         (err, result) => {
           if (!err) {
             resolve(result)

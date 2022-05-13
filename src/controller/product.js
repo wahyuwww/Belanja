@@ -1,6 +1,7 @@
 const productsModel = require('../model/product')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
+// const client = require('../config/redis')
 
 const productsController = {
   getProducts: async (req, res, next) => {
@@ -45,13 +46,16 @@ const productsController = {
   getProductById: async (req, res, next) => {
     try {
       const id = req.params.id
-      const result = await productsModel.modelProducts.getProductById(id)
-      if (result.rows.length === 0) {
-        res.json({
-          msg: 'data not found'
-        })
-      }
-      commonHellper.response(res, result.rows, 'get data success', 200)
+      const { rows: [product] } = await productsModel.modelProducts.getProductById(id)
+      // client.setEx(`products/${id}`, 60 * 60, JSON.stringify(product))
+      // commonHellper.responnotdata(product)
+      // console.log(product.length === null)
+      // if (product === undefined) {
+      //   res.json({
+      //     msg: 'data not found'
+      //   })
+      // }
+      commonHellper.response(res, product, 'get data success dari database', 200)
     } catch (error) {
       console.log(error)
       next(createError)
@@ -126,31 +130,37 @@ const productsController = {
         next(createError)
       })
   },
-  insert: (req, res, next) => {
-    const {
-      name, description, stock, price, idcategory, image, iduser, color, size
-    } =
-      req.body
-    const data = {
-      name,
-      description,
-      stock,
-      price,
-      idcategory,
-      image,
-      iduser,
-      color,
-      size
+  insert: async (req, res, next) => {
+    try {
+      const {
+        name,
+        description,
+        stock,
+        price,
+        idcategory,
+        iduser,
+        // image,
+        color,
+        size
+      } = req.body
+      console.log(req.file.filename)
+      const data = {
+        name,
+        description,
+        stock,
+        price,
+        idcategory,
+        image: `http://${req.get('host')}/img/${req.file.filename}`,
+        iduser,
+        color,
+        size
+      }
+      await productsModel.modelProducts.insert(data)
+      commonHellper.response(res, data, 'data added successfully', 201)
+    } catch (error) {
+      console.log(error)
+      next(createError)
     }
-    productsModel.modelProducts
-      .insert(data)
-      .then(() => {
-        commonHellper.response(res, data, 'data added successfully', 201)
-      })
-      .catch((error) => {
-        console.log(error)
-        next(createError)
-      })
   },
   update: (req, res, next) => {
     const { name, description, stock, price, idcategory, image, color, size } =
