@@ -74,15 +74,15 @@ const authController = {
         phonenumber
       }
       console.log(data)
-      // const { rowCount } = await authModel.FindEmail(email)
-      // if (rowCount) {
-      //   return commonHellper.response(
-      //     res,
-      //     null,
-      //     'Uppsstt email sudah ada',
-      //     200
-      //   )
-      // }
+      const { rowCount } = await authModel.FindEmail(email)
+      if (rowCount) {
+        return commonHellper.response(
+          res,
+          null,
+          'Uppsstt email sudah ada',
+          200
+        )
+      }
       await authModel.create(data)
       sendMail(email)
       commonHellper.response(
