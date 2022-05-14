@@ -214,5 +214,8 @@ module.exports = {
   authController
 }
 
+// psql -U onlkzldnzrwziz -h ec2-34-236-94-53.compute-1.amazonaws.com -p 5432 -d d3hm1aund71eem
 
-// psql -U wiwnvmfmhwskzg -h ec2-52-3-60-53.compute-1.amazonaws.com -p 5432 -d db1a95gt059q31
+
+// ALTER TABLE users
+// ADD role AS enum ('admin','user');

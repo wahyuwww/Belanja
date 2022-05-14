@@ -9,23 +9,27 @@ const { protect, isAdmin } = require('../middleware/auth')
 //   ClearCahceProducts
 // } = require('../middleware/redis')
 
-Router.get('/', protect, isAdmin, productsController.getProducts)
-  .get('/AllProduct', protect, isAdmin, productsController.getAllProducts)
+Router.get('/', protect, productsController.getProducts)
+  .get('/AllProduct', protect, productsController.getAllProducts)
   .get('/filter', productsController.getProductByFilter)
   // .get('/search', productsContoller.productsContoller.getSearchProducts)
   .get('/category/:id', productsController.getProductsByCategori)
-  .get('/:id', productsController.getProductById)
+  .get('/:id', protect, productsController.getProductById)
   .post(
     '/',
+    protect,
+    isAdmin,
     validate.validate,
     uploadImg.multipleUpload,
     productsController.insert
   )
   .put(
     '/:id',
+    protect,
+    isAdmin,
     uploadImg.multipleUpload,
     productsController.update
   )
-  .delete('/:id', productsController.deleteProducts)
+  .delete('/:id', protect, isAdmin, productsController.deleteProducts)
 
 module.exports = Router

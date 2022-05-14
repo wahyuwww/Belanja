@@ -10,7 +10,8 @@ const productsController = {
       const limit = parseInt(req.query.limit) || 5
       const offset = (page - 1) * limit
       const result = await productsModel.modelProducts.select({
-        offset, limit
+        offset,
+        limit
       })
       const {
         rows: [count]
@@ -46,7 +47,9 @@ const productsController = {
   getProductById: async (req, res, next) => {
     try {
       const id = req.params.id
-      const { rows: [product] } = await productsModel.modelProducts.getProductById(id)
+      const {
+        rows: [product]
+      } = await productsModel.modelProducts.getProductById(id)
       // client.setEx(`products/${id}`, 60 * 60, JSON.stringify(product))
       // commonHellper.responnotdata(product)
       // console.log(product.length === null)
@@ -55,7 +58,12 @@ const productsController = {
       //     msg: 'data not found'
       //   })
       // }
-      commonHellper.response(res, product, 'get data success dari database', 200)
+      commonHellper.response(
+        res,
+        product,
+        'get data success dari database',
+        200
+      )
     } catch (error) {
       console.log(error)
       next(createError)
@@ -94,7 +102,13 @@ const productsController = {
           msg: 'data not found'
         })
       }
-      commonHellper.response(res, result.rows, 'get filter data success', 200, pagination)
+      commonHellper.response(
+        res,
+        result.rows,
+        'get filter data success',
+        200,
+        pagination
+      )
     } catch (error) {
       console.log(error)
       next(createError)
@@ -103,7 +117,8 @@ const productsController = {
   getSearchProducts: (req, res, next) => {
     const search = req.query.search
     // console.log(search)
-    productsModel.modelProducts.searchProductsByCategori(search)
+    productsModel.modelProducts
+      .searchProductsByCategori(search)
       .then((result) => {
         if (result.rows.length === 0) {
           res.json({
@@ -121,9 +136,15 @@ const productsController = {
   },
   getProductsByCategori: (req, res, next) => {
     const id = req.params.id
-    productsModel.modelProducts.ProductByCategory(id)
+    productsModel.modelProducts
+      .ProductByCategory(id)
       .then((result) => {
-        commonHellper.response(res, result.rows, 'data product by categori', 200)
+        commonHellper.response(
+          res,
+          result.rows,
+          'data product by categori',
+          200
+        )
       })
       .catch((err) => {
         console.log(err)
@@ -143,19 +164,19 @@ const productsController = {
         color,
         size
       } = req.body
-      console.log(req.file.filename)
+
       const data = {
         name,
         description,
         stock,
         price,
         idcategory,
-        image: `http://${req.get('host')}/img/${req.file.filename}`,
+        image: `http://${req.get('host')}/img/${req.body.image}`,
         iduser,
         color,
         size
       }
-      await productsModel.modelProducts.insert(data)
+      await productsModel.modelProducts.insert(data, req.body)
       commonHellper.response(res, data, 'data added successfully', 201)
     } catch (error) {
       console.log(error)

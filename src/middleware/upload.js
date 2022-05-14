@@ -1,7 +1,7 @@
 const createHttpError = require('http-errors')
 const multer = require('multer')
 const path = require('path')
-const commonHellper = require('../helpers/common')
+// const commonHellper = require('../helpers/common')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -28,6 +28,7 @@ const fileFilter = (req, file, cb) => {
   }
   const limits = parseInt(req.headers['content-length'])
   console.log(limits)
+  // console.log(limits)
   if (limits > 2 * 1000 * 1000) {
     cb(createHttpError('sorry data max 2 Mb'))
   }
@@ -51,7 +52,7 @@ const uploadImg = {
           req.body.image = req.file.filename
         } catch {
           console.log(err)
-          return commonHellper.response(res, null, err.message, 400)
+          // return commonHellper.response(res, null, err.message, 400)
         } finally {
           next()
         }
@@ -74,7 +75,7 @@ const uploadImg = {
           // console.log(req.files.filename)
         } catch {
           console.log(err)
-          return commonHellper.response(res, null, err.message, 400)
+          // return commonHellper.response(res, null, err.message, 400)
         } finally {
           next()
         }
