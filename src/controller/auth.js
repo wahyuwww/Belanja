@@ -64,7 +64,7 @@ const authController = {
       // console.log(name)
       const salt = bcrypt.genSaltSync(10)
       const passwrodHash = bcrypt.hashSync(password, salt)
-      console.log(passwrodHash)
+      // console.log(passwrodHash)
       const data = {
         id: uuidv4(),
         email,

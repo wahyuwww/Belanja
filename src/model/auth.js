@@ -19,11 +19,11 @@ const authModel = {
       )
     })
   },
-  create: ({ id, name, password, email, role = 'users', phone_number }) => {
+  create: ({ id, name, password, email, role = 'users', phonenumber }) => {
     return new Promise((resolve, reject) => {
       db.query(
         'INSERT INTO users (id, name, password, email,role,phonenumber) VALUES ($1,$2,$3,$4,$5,$6)',
-        [id, name, password, email, role, phone_number],
+        [id, name, password, email, role, phonenumber],
         (err, result) => {
           if (!err) {
             resolve(result)
@@ -142,9 +142,7 @@ const authModel = {
     })
   },
   activasi: (id) => {
-    return db.query('SELECT * FROM users WHERE id = $1', [
-      id
-    ])
+    return db.query('SELECT * FROM users WHERE id = $1', [id])
   }
 }
 
