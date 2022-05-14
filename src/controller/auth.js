@@ -74,15 +74,15 @@ const authController = {
         phonenumber
       }
       console.log(data)
-      const { rowCount } = await authModel.FindEmail(email)
-      if (rowCount) {
-        return commonHellper.response(
-          res,
-          null,
-          'Uppsstt email sudah ada',
-          200
-        )
-      }
+      // const { rowCount } = await authModel.FindEmail(email)
+      // if (rowCount) {
+      //   return commonHellper.response(
+      //     res,
+      //     null,
+      //     'Uppsstt email sudah ada',
+      //     200
+      //   )
+      // }
       await authModel.create(data)
       sendMail(email)
       commonHellper.response(
@@ -214,8 +214,10 @@ module.exports = {
   authController
 }
 
-// psql -U onlkzldnzrwziz -h ec2-34-236-94-53.compute-1.amazonaws.com -p 5432 -d d3hm1aund71eem
-
+// psql -U dnymxhsatwjxce -h ec2-52-4-104-184.compute-1.amazonaws.com -p 5432 -d dd7rboub6u32p5
 
 // ALTER TABLE users
 // ADD role AS enum ('admin','user');
+
+// heroku log --tail
+// pg_dump -U postgres -h 127.0.0.1 web2 > web2.pqsql
