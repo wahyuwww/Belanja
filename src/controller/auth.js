@@ -17,40 +17,29 @@ const authController = {
         rows: [user]
       } = await authModel.FindEmail(email)
       if (!user) {
-        return commonHellper.response(
-          res,
-          null,
-          'data yang anda inputkan salah',
-          200
-        )
+        return res.json({
+          message: 'data yang anda inputkan salah'
+        })
       }
       const invalidPassword = bcrypt.compareSync(password, user.password)
-      // console.log(invalidPassword)
-      if (!invalidPassword) {
-        return commonHellper.response(
-          res,
-          null,
-          'data yang anda inputkan salah',
-          200
-        )
+      // console.log(password)
+      if (!invalidPassword || !user) {
+        return res.json({
+          message: ' data yang anda inputkan salah'
+        })
       }
       delete user.password
       const payload = {
         email: user.email,
         role: user.role,
-        name: user.name
+        name: user.name,
+        status: user.active
       }
       user.token = authHelper.generateToken(payload)
-      // const token = jwt.sign(payload, process.env.SECRET_KEY, {
-      //   expiresIn: '1h'
-      // })
-      // console.log(user.role)
       const data = {
         email,
         token: user.token
       }
-      user.refreshToken = await authHelper.generateRefreshToken(payload)
-      console.log(user.refreshToken)
       commonHellper.response(res, data, 'anda berhasil login bro', 200)
     } catch (error) {
       console.log(error)
@@ -60,39 +49,31 @@ const authController = {
 
   register: async (req, res, next) => {
     try {
-      const { email, password, name, role, phonenumber } = req.body
-      // console.log(name)
+      const { email, password, name, role } = req.body
       const salt = bcrypt.genSaltSync(10)
       const passwrodHash = bcrypt.hashSync(password, salt)
-      // console.log(passwrodHash)
       const data = {
         id: uuidv4(),
         email,
         password: passwrodHash,
         name,
         role,
-        phonenumber
+        active: 0
       }
-      console.log(data)
+      // console.log(data)
       const { rowCount } = await authModel.FindEmail(email)
       if (rowCount) {
-        return commonHellper.response(
-          res,
-          null,
-          'Uppsstt email sudah ada',
-          200
-        )
+        return next(createError(403, 'user sudah terdaftar'))
       }
       await authModel.create(data)
-      sendMail(email)
+      sendMail({ email, name, role })
       commonHellper.response(
         res,
         {
           id: uuidv4(),
           email,
           name,
-          role,
-          phonenumber
+          role: role || 'users'
         },
         'Register Success',
         200
@@ -129,7 +110,6 @@ const authController = {
   refreshToken: async (req, res, next) => {
     try {
       const refreshToken = req.body.refreshToken
-      // console.log(refreshToken)
       const decoded = await jwt.verify(refreshToken, process.env.SECRET_KEY)
       console.log(decoded)
       const newPayload = {
@@ -137,9 +117,6 @@ const authController = {
         name: decoded.name,
         role: decoded.role
       }
-      // Wahyu2508,.
-      // console.log(newDataPayload)
-      //  user.token = authHelper.generateToken(payload);
       const newToken = await authHelper.generateToken(newPayload)
       const newRefreshToken = await authHelper.generateRefreshToken(newPayload)
       const result = {
@@ -156,10 +133,9 @@ const authController = {
       } else {
         next(createError(400, 'token not active'))
       }
-      // helpers.response(res, {message: 'Internal Server Error'}, 500)
     }
   },
-  sendEmail: (req, res) => {
+  sendEmail: (req, res, next) => {
     authModel
       .sendEmail(req.body)
       .then((data) => {
@@ -189,19 +165,63 @@ const authController = {
       })
       .catch((err) => {
         console.log(err)
+        next(createError)
       })
   },
   activasi: async (req, res, next) => {
     try {
-      const id = req.params.id
-      // const id = req.query.id
-      console.log(id)
-      const result = await authModel.activasi(id)
-      console.log(result)
+      const token = req.params.token
+      const decoded = await jwt.verify(token, process.env.SECRET_KEY)
+      // console.log(decoded)
+      const data = {
+        active: 1,
+        email: decoded.email
+      }
+
+      await authModel.activasi(data)
+      const newPayload = {
+        email: decoded.email,
+        name: decoded.name,
+        role: decoded.role
+      }
+      const newRefreshToken = await authHelper.generateRefreshToken(newPayload)
+      if (decoded.status === '1') {
+        return res.json({ message: 'akun anda sudah terverifikasi' })
+      }
+      const result = {
+        email: decoded.email,
+        name: decoded.name,
+        tokenNew: newRefreshToken
+      }
+      commonHellper.response(res, result, 'akun done verifikasi', 200)
+    } catch (error) {
+      console.log(error)
+      next(createError)
+    }
+  },
+  changePassword: (req, res, next) => {
+    authModel
+      .changePassword(req.body)
+      .then(() => {
+        res.json({
+          message: 'berhasil diganti'
+        })
+      })
+      .catch((_error) => {
+        next(createError)
+      })
+  },
+  cekActivasi: async (req, res, next) => {
+    try {
+      const token = req.params.token
+      const decoded = await jwt.verify(token, process.env.SECRET_KEY)
+      const newPayload = {
+        email: decoded.email
+      }
       commonHellper.response(
         res,
-        result,
-        'get data success dari database',
+        newPayload,
+        'akun anda dengan belum terverifikasi',
         200
       )
     } catch (error) {
