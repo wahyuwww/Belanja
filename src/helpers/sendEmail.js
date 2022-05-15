@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer')
 const jwt = require('jsonwebtoken')
 const text = require('../helpers/textEmail')
 
-const sendMail = async (email) => {
+const sendMail = async ({ email, name, role }) => {
   try {
     // create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
@@ -14,12 +14,16 @@ const sendMail = async (email) => {
         pass: 'purwanto2508' // generated ethereal password
       }
     })
-    const token = jwt.sign({ email }, process.env.SECRET_KEY, {
-      expiresIn: '24h'
-    })
+    const token = jwt.sign(
+      { email, name, role },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: '24h'
+      }
+    )
     // send mail with defined transport object
     const info = await transporter.sendMail({
-      from: '"Saya Wahyu" <wahyu.purwanto258@gmail.com>', // sender address
+      from: '"Belanjain Aja" <wahyu.purwanto258@gmail.com>', // sender address
       to: email, // list of receivers
       subject: 'Hello ✔', // Subject line
       html: text(token) // html body

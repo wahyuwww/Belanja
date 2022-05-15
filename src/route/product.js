@@ -4,13 +4,14 @@ const uploadImg = require('../middleware/upload')
 const { productsController } = require('../controller/product')
 const validate = require('../middleware/validate')
 const { protect, isAdmin } = require('../middleware/auth')
+const activasi = require('../middleware/activasi')
 // const {
 //   hitCacheDetailProduct,
 //   ClearCahceProducts
 // } = require('../middleware/redis')
 
 Router.get('/', protect, productsController.getProducts)
-  .get('/AllProduct', protect, productsController.getAllProducts)
+  .get('/AllProduct', protect, activasi, productsController.getAllProducts)
   .get('/filter', productsController.getProductByFilter)
   // .get('/search', productsContoller.productsContoller.getSearchProducts)
   .get('/category/:id', productsController.getProductsByCategori)

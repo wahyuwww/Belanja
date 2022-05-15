@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const db = require('../config/db')
 
 const authModel = {
@@ -13,17 +13,17 @@ const authModel = {
           if (!err) {
             resolve(result)
           } else {
-            reject(new Error('data error'))
+            reject(err)
           }
         }
       )
     })
   },
-  create: ({ id, name, password, email, role = 'users', phonenumber }) => {
+  create: ({ id, name, password, email, role = 'users', active = 0 }) => {
     return new Promise((resolve, reject) => {
       db.query(
-        'INSERT INTO users (id, name, password, email,role,phonenumber) VALUES ($1,$2,$3,$4,$5,$6)',
-        [id, name, password, email, role, phonenumber],
+        'INSERT INTO users (id, name, password, email,role,active) VALUES ($1,$2,$3,$4,$5,$6)',
+        [id, name, password, email, role, active],
         (err, result) => {
           if (!err) {
             resolve(result)
@@ -34,94 +34,51 @@ const authModel = {
       )
     })
   },
-  postNewUser: (body) => {
+  activasi: ({ active = '1', email }) => {
     return new Promise((resolve, reject) => {
-      const qs = 'SELECT email FROM users WHERE email = $1'
-      db.query(qs, [body.email], (_err, data) => {
-        console.log()
-        if (!data.rowCount.length) {
-          reject(new Error('account is ready'))
-        } else {
-          bcrypt.genSalt(10, (err, salt) => {
-            if (err) {
-              reject(err)
+      db.query(
+        'UPDATE users SET active = $1 where email = $2',
+        [active, email],
+        (err, result) => {
+          if (!err) {
+            resolve(result)
+          } else {
+            reject(new Error('data error disini'))
+          }
+        }
+      )
+    })
+  },
+  changePassword: (body) => {
+    return new Promise((resolve, reject) => {
+      const qs = 'SELECT email FROM users WHERE id = $1'
+      db.query(qs, [body.id], (_err, data) => {
+        if (!data.rows[0]) {
+          bcrypt.genSalt(10, (_err, salt) => {
+            if (_err) {
+              reject(_err)
             }
-            const { name, password, email, phone_number } = body
-            // console.log(name)
+            const { password, email } = body
+
             bcrypt.hash(password, salt, (err, hashedPassword) => {
               if (err) {
                 reject(err)
               }
-              db.query(
-                'INSERT INTO users ( name, password, email, phone_number) VALUES ($1,$2,$3,$4)',
-                [name, password, email, phone_number],
-                (err, data) => {
-                  if (!err) {
-                    const payload = {
-                      email,
-                      password: hashedPassword
-                    }
-                    const token = jwt.sign(payload, process.env.SECRET_KEY, {
-                      expiresIn: '1h'
-                    })
-                    const id = data.insertId
-                    resolve({ token, id })
-                  } else {
-                    reject(err)
-                  }
-                }
-              )
-            })
-          })
-        }
-      })
-    })
-  },
-  loginUser: (body) => {
-    return new Promise((resolve, reject) => {
-      db.query(
-        'SELECT * FROM users WHERE email = $1',
-        [body.email],
-        (err, data) => {
-          if (err) {
-            reject(err)
-          }
-          // console.log(data.rows[0].password.length)
-          if (!data.rows[0].password.length) {
-            reject(new Error('password wrong'))
-          } else {
-            bcrypt.compare(
-              body.password,
-              data.rows[0].password,
-              (err, result) => {
-                // console.log(!result)
-                if (result) {
-                  const { email } = body
-                  const { password, id } = data.rows[0]
-                  const payload = {
-                    email,
-                    password
-                  }
-                  const token = jwt.sign(payload, process.env.SECRET_KEY, {
-                    expiresIn: '1h'
-                  })
-                  resolve({
-                    id,
-                    email,
-                    token
-                  })
-                }
-                if (!result) {
-                  reject(new Error('data password salah'))
-                }
-                if (err) {
+              const queryString =
+                'UPDATE users SET password= $1 WHERE email = $2'
+              db.query(queryString, [hashedPassword, email], (err, data) => {
+                if (!err) {
+                  resolve({ msg: 'change password success' })
+                } else {
                   reject(err)
                 }
-              }
-            )
-          }
+              })
+            })
+          })
+        } else {
+          reject(_err)
         }
-      )
+      })
     })
   },
   sendEmail: (body) => {
@@ -140,10 +97,10 @@ const authModel = {
         }
       })
     })
-  },
-  activasi: (id) => {
-    return db.query('SELECT * FROM users WHERE id = $1', [id])
   }
+  // cekActivasi: ({ active = '1', email }) => {
+  //   return db.query('UPDATE users SET active = $1 where email = $2', [active, email])
+  // }
 }
 
 module.exports = {
