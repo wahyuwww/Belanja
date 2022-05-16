@@ -12,14 +12,15 @@ Router.get('/', transactionController.getTransaction)
     transactionController.getAllTransactions
   )
   .get('/search', transactionController.getSearchTransactions)
+  .get(
+    '/transactionDetail/:id',
+    protect,
+    isUsers,
+    transactionController.getTransactionDetail
+  )
   .post('/', transactionController.insert)
   .put('/:id', protect, isAdmin, transactionController.update)
   .delete('/:id', transactionController.deleteTransaction)
   .get('/:id', transactionController.getTransactionsById)
-  .get(
-    '/transactionDetail/:id',
-    protect,
-    isUsers, transactionController.getTransactionDetail
-  )
   .patch('/address', isAdmin, protect, transactionController.insertAddres)
 module.exports = Router
