@@ -119,8 +119,7 @@ const transactionController = {
   getTransactionDetail: async (req, res, next) => {
     try {
       const id = req.params.id
-      const result =
-      await transactiontsModel.modelTransaction.transactionsDetail(id)
+      const result = await transactiontsModel.modelTransaction.transactionsDetail(id)
       console.log(result)
       commonHellper.response(res, result.rows, 'get data success', 200)
     } catch (error) {
