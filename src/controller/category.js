@@ -54,20 +54,11 @@ const categoryController = {
       const offset = (page - 1) * limit
       const type = req.query.type
       // console.log(type)
-      const {
-        rows: [count]
-      } = await categoryModel.modelCategories.countCategory()
-      const totalData = parseInt(count.total)
-      const totalPage = Math.ceil(totalData / limit)
-      // console.log(totalPage)
-      const pagination = {
-        currentPage: page,
-        limit,
-        totalData,
-        totalPage
-      }
-      const { rows } = await categoryModel.modelCategories.sortByCategori({ type, limit, offset })
-      commonHellper.response(res, rows, 'get data by filter', 200, pagination)
+      const result = await categoryModel.modelCategories.sortByCategori({ type, limit, offset })
+      console.log(result)
+      res.json({
+        data: result.rows
+      })
     } catch (error) {
       console.log(error)
       next(createError)
