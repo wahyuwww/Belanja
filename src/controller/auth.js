@@ -40,7 +40,7 @@ const authController = {
         email,
         token: user.token
       }
-      commonHellper.response(res, data, 'anda berhasil login bro', 200)
+      commonHellper.response(res, data, 'selemat anda berhasil login', 200)
     } catch (error) {
       console.log(error)
       next(createError)

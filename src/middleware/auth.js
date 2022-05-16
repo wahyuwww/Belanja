@@ -33,8 +33,15 @@ const isAdmin = (req, res, next) => {
   }
   next()
 }
+const isUsers = (req, res, next) => {
+  if (req.decoded.role !== 'users') {
+    return next(createError(400, 'user only'))
+  }
+  next()
+}
 
 module.exports = {
   protect,
-  isAdmin
+  isAdmin,
+  isUsers
 }

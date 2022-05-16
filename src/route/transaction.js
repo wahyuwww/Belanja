@@ -2,7 +2,7 @@ const express = require('express')
 const Router = express.Router()
 const { transactionController } = require('../controller/transactions')
 // const validateStatus = require('../middleware/statusTransactions')
-const { isAdmin, protect } = require('../middleware/auth')
+const { isAdmin, protect, isUsers } = require('../middleware/auth')
 
 Router.get('/', transactionController.getTransaction)
   .get(
@@ -16,6 +16,10 @@ Router.get('/', transactionController.getTransaction)
   .put('/:id', protect, isAdmin, transactionController.update)
   .delete('/:id', transactionController.deleteTransaction)
   .get('/:id', transactionController.getTransactionsById)
-  .get('/transactionDetail/:id', transactionController.getTransactionDetail)
+  .get(
+    '/transactionDetail/:id',
+    protect,
+    isUsers, transactionController.getTransactionDetail
+  )
   .patch('/address', isAdmin, protect, transactionController.insertAddres)
 module.exports = Router
