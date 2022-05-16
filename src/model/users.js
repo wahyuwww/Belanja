@@ -54,27 +54,25 @@ const modelUsers = {
     name,
     password,
     email,
-    phone_number,
+    phonenumber,
     gender,
     date_of_brith,
     address,
-    image,
-    id
+    image
   }) => {
     // console.log(name)
     return new Promise((resolve, reject) => {
       db.query(
-        'UPDATE users SET name = $1,  password = $2, email = $3, phone_number = $4, gender = $5, date_of_brith = $6, address= $7,image = $8 WHERE id = $9',
+        'UPDATE users SET name = $1,  password = $2, email = $3, phonenumber = $4, gender = $5, date_of_brith = $6, address= $7,image = $8 WHERE email = $9',
         [
           name,
           password,
           email,
-          phone_number,
+          phonenumber,
           gender,
           date_of_brith,
           address,
-          image,
-          id
+          image
         ],
         (err, result) => {
           if (!err) {
@@ -90,7 +88,7 @@ const modelUsers = {
     const { name, email, phonenumber, gender, image, date_of_brith, id } = body
     return new Promise((resolve, reject) => {
       db.query(
-        'UPDATE users SET name = $1, email = $2, phonenumber = $3, gender = $4, image = $5,  date_of_brith = $6 WHERE id=$7',
+        'UPDATE users SET name = COALESCE($1,name), email = COALESCE($3,email), phonenumber = COALESCE($4,phonenumber), gender = COALESCE($5,gender), date_of_brith = COALESCE($6,date_of_brith), address= COALESCE($7,address),image = COALESCE($8,image)WHERE email = $9',
         [name, email, phonenumber, gender, image, date_of_brith, id],
         (err, result) => {
           if (!err) {

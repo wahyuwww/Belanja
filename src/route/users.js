@@ -9,9 +9,9 @@ Router.get('/', usersController.getUsers)
   .get('/search', usersController.getSearchUsers)
   .post('/', isAdmin, protect, usersController.createUsers)
   // .put('/:id', usersController.update)
-  .put('/:id', isAdmin, protect, usersController.update)
+  .put('/:id', protect, isAdmin, usersController.update)
   .patch(
-    '/updateProfil/:id',
+    '/updateProfil/',
     uploadImg.singleUpload,
     usersController.updateProfil
   )

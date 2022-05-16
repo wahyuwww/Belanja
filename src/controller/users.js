@@ -119,12 +119,12 @@ const usersController = {
       })
     })
   },
-  update: (req, res, next) => {
+  update: async (req, res, next) => {
     const {
       name,
       password,
       email,
-      phone_number,
+      phonenumber,
       gender,
       date_of_brith,
       address,
@@ -135,14 +135,13 @@ const usersController = {
       name,
       password,
       email,
-      phone_number,
+      phonenumber,
       gender,
       date_of_brith,
       address,
       role,
       image
     }
-    console.log(2)
     const id = req.params.id
     console.log(data)
     bcrypt.genSalt(10, function (_err, salt) {
@@ -177,44 +176,43 @@ const usersController = {
         next(createError)
       })
   },
-  updateProfil: (req, res, next) => {
-    const {
-      name,
-      email,
-      gender,
-      dateofbrith,
-      image,
-      address,
-      password,
-      phonenumber
-    } = req.body
-    const data = {
-      name,
-      email,
-      address,
-      password,
-      phonenumber,
-      gender,
-      dateofbrith,
-      image
+  updateProfil: async (req, res, next) => {
+    try {
+      const token = req.headers.authorization.split(' ')[1]
+      const decoded = await jwt.verify(token, process.env.SECRET_KEY)
+      console.log(decoded)
+      const {
+        name,
+        email,
+        gender,
+        dateofbrith,
+        image,
+        address,
+        password,
+        phonenumber
+      } = req.body
+      const data = {
+        name,
+        email,
+        address,
+        password,
+        phonenumber,
+        gender,
+        dateofbrith,
+        image
+      }
+      console.log(data)
+      await modelUsers.updateProfil(data)
+      const newPayload = {
+        email: decoded.email,
+        name: decoded.name,
+        role: decoded.role
+      }
+      commonHellper.response(res, newPayload, 'akun done verifikasi', 200)
+    } catch (error) {
+      console.log(error)
+      next(createError)
     }
-    const id = req.params.id
-    console.log(data)
-    bcrypt.genSalt(10, function (_err, salt) {
-      bcrypt.hash(data.password, salt, function (_err, hash) {
-        data.password = hash
-        // console.log(data)
-        modelUsers
-          .update({ ...data, id })
-          .then((result) => {
-            commonHellper.response(res, data, 'data updated success', 200)
-          })
-          .catch((error) => {
-            console.log(error)
-            next(createError)
-          })
-      })
-    })
   },
   verifyEmail: (req, res, next, email) => {
     const token = jwt.sign({ email }, process.env.SECRET_KEY, {

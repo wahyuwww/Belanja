@@ -12,7 +12,7 @@ const activasi = require('../middleware/activasi')
 
 Router.get('/', protect, productsController.getProducts)
   .get('/AllProduct', protect, activasi, productsController.getAllProducts)
-  .get('/filter', productsController.getProductByFilter)
+  .get('/filter', protect, productsController.getProductByFilter)
   // .get('/search', productsContoller.productsContoller.getSearchProducts)
   .get('/category/:id', productsController.getProductsByCategori)
   .get('/:id', protect, productsController.getProductById)

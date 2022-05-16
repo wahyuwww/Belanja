@@ -45,7 +45,7 @@ const uploadImg = {
     singleUpload(req, res, (err) => {
       if (err) {
         res.json({
-          msg: err.message
+          message: err.message
         })
       } else {
         try {
@@ -64,7 +64,7 @@ const uploadImg = {
     multipleUpload(req, res, (err) => {
       if (err) {
         res.json({
-          msg: err.message
+          message: err.message
         })
       } else {
         try {
