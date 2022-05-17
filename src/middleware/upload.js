@@ -14,9 +14,9 @@ const storage = multer.diskStorage({
     cb(null, nameFormat)
   }
 })
-const limits = {
-  fileSize: 2 * 1000 * 1000
-}
+// const limits = {
+//   fileSize: 2 * 1000 * 1000
+// }
 
 const fileFilter = (req, file, cb) => {
   const fileTypes = /jpg|jpeg|png/
@@ -35,7 +35,6 @@ const fileFilter = (req, file, cb) => {
 }
 const upload = multer({
   storage,
-  limits,
   fileFilter
 })
 
@@ -68,11 +67,12 @@ const uploadImg = {
         })
       } else {
         try {
-          const image = req.files.map((file) => {
-            return file.filename
-          })
-          req.body.image = image.join(',')
-          // console.log(req.files.filename)
+          // req.files.map((file) => {
+          //   return file.filename
+          // })
+          return req.file.filename
+          // req.body.image = image.join(' ')
+          // console.log(req.body.image)
         } catch {
           console.log(err)
           // return commonHellper.response(res, null, err.message, 400)

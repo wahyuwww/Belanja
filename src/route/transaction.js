@@ -3,6 +3,7 @@ const Router = express.Router()
 const { transactionController } = require('../controller/transactions')
 // const validateStatus = require('../middleware/statusTransactions')
 const { isAdmin, protect, isUsers } = require('../middleware/auth')
+const activasi = require('../middleware/activasi')
 
 Router.get('/', transactionController.getTransaction)
   .get(
@@ -14,7 +15,7 @@ Router.get('/', transactionController.getTransaction)
   .get('/search', transactionController.getSearchTransactions)
   .get(
     '/transactionDetail/:id',
-    protect,
+    protect, activasi,
     isUsers,
     transactionController.getTransactionDetail
   )

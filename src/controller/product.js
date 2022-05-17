@@ -1,7 +1,7 @@
 const productsModel = require('../model/product')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
-// const client = require('../config/redis')
+const client = require('../config/redis')
 
 const productsController = {
   getProducts: async (req, res, next) => {
@@ -50,7 +50,7 @@ const productsController = {
       const {
         rows: [product]
       } = await productsModel.modelProducts.getProductById(id)
-      // client.setEx(`products/${id}`, 60 * 60, JSON.stringify(product))
+      client.setEx(`products/${id}`, 60 * 60, JSON.stringify(product))
       // commonHellper.responnotdata(product)
       // console.log(product.length === null)
       // if (product === undefined) {
@@ -160,18 +160,20 @@ const productsController = {
         price,
         idcategory,
         iduser,
-        // image,
         color,
         size
       } = req.body
-
+      const gambar = req.files.map((file) => {
+        return `http://${req.get('host')}/img/${file.filename}`
+      })
+      // console.log(gambar2)
       const data = {
         name,
         description,
         stock,
         price,
         idcategory,
-        image: `http://${req.get('host')}/img/${req.body.image}`,
+        image: [gambar],
         iduser,
         color,
         size
@@ -184,7 +186,7 @@ const productsController = {
     }
   },
   update: (req, res, next) => {
-    const { name, description, stock, price, idcategory, image, color, size } =
+    const { name, description, stock, price, idcategory, color, size } =
       req.body
     const data = {
       name,
@@ -192,12 +194,13 @@ const productsController = {
       stock,
       price,
       idcategory,
-      image,
+      image: `http://${req.get('host')}/img/${req.body.image}`,
       color,
       size
     }
     console.log(data)
     const id = req.params.id
+    client.setEx(`products/${id}`, 60 * 60, JSON.stringify(data))
     productsModel.modelProducts
       .update({ ...data, id })
       .then(() => {

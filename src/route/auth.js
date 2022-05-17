@@ -10,7 +10,7 @@ Router.post('/login', authController.loginUser)
   .get('/profile', protect, authController.profil)
   .post('/refreshtoken', authController.refreshToken)
   .put('/activasi/:token', authController.activasi)
-  .get('/activasi/:token', authController.cekActivasi)
+  .get('/activasi/:token', authController.activasi)
   .post('/changePassword', authController.changePassword)
   .post('/sendEmail', authController.sendEmail)
 module.exports = Router

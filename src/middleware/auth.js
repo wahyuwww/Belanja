@@ -34,7 +34,7 @@ const isAdmin = (req, res, next) => {
   next()
 }
 const isUsers = (req, res, next) => {
-  if (req.decoded.role !== 'users') {
+  if (req.decoded.role !== 'user') {
     return next(createError(400, 'user only'))
   }
   next()

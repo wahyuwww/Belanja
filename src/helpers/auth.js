@@ -10,7 +10,7 @@ const generateToken = (payload) => {
 const generateRefreshToken = (payload) => {
   return new Promise((resolve, reject) => {
     const verify = {
-      expiresIn: '1h',
+      expiresIn: 60 * 60,
       issuer: 'belanja aja'
     }
     jwt.sign(payload, process.env.SECRET_KEY, verify, (err, token) => {

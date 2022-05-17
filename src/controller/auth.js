@@ -16,6 +16,7 @@ const authController = {
       const {
         rows: [user]
       } = await authModel.FindEmail(email)
+      console.log(user)
       if (!user) {
         return res.json({
           message: 'data yang anda inputkan salah'
@@ -23,22 +24,29 @@ const authController = {
       }
       const invalidPassword = bcrypt.compareSync(password, user.password)
       // console.log(password)
-      if (!invalidPassword || !user) {
+      if (!invalidPassword) {
         return res.json({
           message: ' data yang anda inputkan salah'
+        })
+      }
+      if (user.active === '0') {
+        return res.json({
+          message: ' anda belum verifikasi'
         })
       }
       delete user.password
       const payload = {
         email: user.email,
-        role: user.role,
         name: user.name,
+        role: user.role,
         status: user.active
       }
       user.token = authHelper.generateToken(payload)
+      const newRefreshToken = await authHelper.generateRefreshToken(payload)
       const data = {
         email,
-        token: user.token
+        token: user.token,
+        refreshToken: newRefreshToken
       }
       commonHellper.response(res, data, 'selemat anda berhasil login', 200)
     } catch (error) {
@@ -57,10 +65,10 @@ const authController = {
         email,
         password: passwrodHash,
         name,
-        role,
+        role: role || 'user',
         active: 0
       }
-      // console.log(data)
+      console.log(data)
       const { rowCount } = await authModel.FindEmail(email)
       if (rowCount) {
         return next(createError(403, 'user sudah terdaftar'))
@@ -172,10 +180,11 @@ const authController = {
     try {
       const token = req.params.token
       const decoded = await jwt.verify(token, process.env.SECRET_KEY)
-      // console.log(decoded)
+      console.log(decoded)
       const data = {
         active: 1,
-        email: decoded.email
+        email: decoded.email,
+        role: decoded.role
       }
 
       await authModel.activasi(data)
@@ -184,16 +193,17 @@ const authController = {
         name: decoded.name,
         role: decoded.role
       }
-      const newRefreshToken = await authHelper.generateRefreshToken(newPayload)
+      console.log(newPayload)
+      // const newRefreshToken = await authHelper.generateRefreshToken(newPayload)
       if (decoded.status === '1') {
         return res.json({ message: 'akun anda sudah terverifikasi' })
       }
       const result = {
         email: decoded.email,
-        name: decoded.name,
-        tokenNew: newRefreshToken
+        name: decoded.name
+        // tokenNew: newRefreshToken
       }
-      commonHellper.response(res, result, 'akun done verifikasi', 200)
+      commonHellper.response(res, result, 'akun done verifikasi, silahkan login', 200)
     } catch (error) {
       console.log(error)
       next(createError)

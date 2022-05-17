@@ -3,23 +3,29 @@ const Router = express.Router()
 const uploadImg = require('../middleware/upload')
 const { productsController } = require('../controller/product')
 const validate = require('../middleware/validate')
-const { protect, isAdmin } = require('../middleware/auth')
-const activasi = require('../middleware/activasi')
-// const {
-//   hitCacheDetailProduct,
-//   ClearCahceProducts
-// } = require('../middleware/redis')
+const { protect, isAdmin, isUsers } = require('../middleware/auth')
+const {
+  hitCacheDetailProduct,
+  ClearCahceProducts
+} = require('../middleware/redis')
 
-Router.get('/', protect, productsController.getProducts)
-  .get('/AllProduct', protect, activasi, productsController.getAllProducts)
-  .get('/filter', protect, productsController.getProductByFilter)
+Router.get('/', productsController.getProducts)
+  .get('/AllProduct', productsController.getAllProducts)
+  .get('/filter', productsController.getProductByFilter)
   // .get('/search', productsContoller.productsContoller.getSearchProducts)
-  .get('/category/:id', productsController.getProductsByCategori)
-  .get('/:id', protect, productsController.getProductById)
+  .get(
+    '/category/:id',
+    protect,
+    isUsers, productsController.getProductsByCategori
+  )
+  .get(
+    '/:id',
+    protect,
+    hitCacheDetailProduct,
+    productsController.getProductById
+  )
   .post(
     '/',
-    protect,
-    isAdmin,
     validate.validate,
     uploadImg.multipleUpload,
     productsController.insert
@@ -28,9 +34,16 @@ Router.get('/', protect, productsController.getProducts)
     '/:id',
     protect,
     isAdmin,
+    ClearCahceProducts,
     uploadImg.multipleUpload,
     productsController.update
   )
-  .delete('/:id', protect, isAdmin, productsController.deleteProducts)
+  .delete(
+    '/:id',
+    protect,
+    isAdmin,
+    ClearCahceProducts,
+    productsController.deleteProducts
+  )
 
 module.exports = Router

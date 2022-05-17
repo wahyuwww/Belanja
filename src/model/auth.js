@@ -19,7 +19,7 @@ const authModel = {
       )
     })
   },
-  create: ({ id, name, password, email, role = 'users', active = 0 }) => {
+  create: ({ id, name, password, email, role = 'user', active = 0 }) => {
     return new Promise((resolve, reject) => {
       db.query(
         'INSERT INTO users (id, name, password, email,role,active) VALUES ($1,$2,$3,$4,$5,$6)',
