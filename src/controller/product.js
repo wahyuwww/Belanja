@@ -174,7 +174,7 @@ const productsController = {
         stock,
         price,
         idcategory,
-        image: [gambar],
+        image: gambar,
         iduser,
         color,
         size
