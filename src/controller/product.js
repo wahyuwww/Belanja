@@ -164,7 +164,7 @@ const productsController = {
         size
       } = req.body
       const gambar = req.files.map((file) => {
-        return `http://${req.get('host')}/img/${file.filename}`
+        return `https://belanjain-aja.herokuapp.com/v1/products/img/${file.filename}`
       })
       // console.log(gambar2)
       const data = {
