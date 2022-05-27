@@ -36,13 +36,15 @@ const productsController = {
     }
   },
   getAllProducts: async (req, res, next) => {
-    try {
-      const result = await productsModel.modelProducts.getAllProducts()
-      commonHellper.response(res, result, 'get data success', 200)
-    } catch (error) {
-      // console.log(error)
-      next(createError)
-    }
+    productsModel.modelProducts
+      .getAllProducts()
+      .then((result) => {
+        commonHellper.response(res, result, 'get data success', 200)
+      })
+      .catch((error) => {
+        console.log(error)
+        next(createError)
+      })
   },
   getProductById: async (req, res, next) => {
     try {
@@ -161,12 +163,13 @@ const productsController = {
         idcategory,
         iduser,
         color,
+        image,
         size
       } = req.body
       // console.log(req.get('host'))
-      const gambar = req.files.map((file) => {
-        return `http://${req.get('host')}/img/${file.filename}`
-      })
+      // const gambar = req.files.map((file) => {
+      //   return `http://${req.get('host')}/img/${file.filename}`
+      // })
       // console.log(gambar2)
       const data = {
         name,
@@ -174,11 +177,12 @@ const productsController = {
         stock,
         price,
         idcategory,
-        image: gambar,
+        image,
         iduser,
         color,
         size
       }
+      console.log(data)
       await productsModel.modelProducts.insert(data, req.body)
       commonHellper.response(res, data, 'data added successfully', 201)
     } catch (error) {

@@ -67,12 +67,10 @@ const uploadImg = {
         })
       } else {
         try {
-          // req.files.map((file) => {
-          //   return file.filename
-          // })
-          return req.file.filename
-          // req.body.image = image.join(' ')
-          // console.log(req.body.image)
+          const image = req.files.map((file) => {
+            return 'http://localhost:4000/img/' + file.filename
+          })
+          req.body.image = image.join(',')
         } catch {
           console.log(err)
           // return commonHellper.response(res, null, err.message, 400)
