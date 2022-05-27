@@ -68,7 +68,7 @@ const uploadImg = {
       } else {
         try {
           const image = req.files.map((file) => {
-            return 'http://localhost:4000/img/' + file.filename
+            return 'https://belanjain-aja.herokuapp.com/img' + file.filename
           })
           req.body.image = image.join(',')
         } catch {
