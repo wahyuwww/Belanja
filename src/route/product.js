@@ -4,10 +4,10 @@ const uploadImg = require('../middleware/upload')
 const { productsController } = require('../controller/product')
 const validate = require('../middleware/validate')
 const { protect, isAdmin, isUsers } = require('../middleware/auth')
-const {
-  hitCacheDetailProduct,
-  ClearCahceProducts
-} = require('../middleware/redis')
+// const {
+//   hitCacheDetailProduct,
+//   ClearCahceProducts
+// } = require('../middleware/redis')
 
 Router.get('/', productsController.getProducts)
   .get('/AllProduct', productsController.getAllProducts)
@@ -21,7 +21,6 @@ Router.get('/', productsController.getProducts)
   .get(
     '/:id',
     protect,
-    hitCacheDetailProduct,
     productsController.getProductById
   )
   .post(
@@ -34,7 +33,6 @@ Router.get('/', productsController.getProducts)
     '/:id',
     protect,
     isAdmin,
-    ClearCahceProducts,
     uploadImg.multipleUpload,
     productsController.update
   )
@@ -42,7 +40,6 @@ Router.get('/', productsController.getProducts)
     '/:id',
     protect,
     isAdmin,
-    ClearCahceProducts,
     productsController.deleteProducts
   )
 

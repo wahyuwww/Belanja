@@ -1,7 +1,7 @@
 const productsModel = require('../model/product')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
-const client = require('../config/redis')
+// const client = require('../config/redis')
 
 const productsController = {
   getProducts: async (req, res, next) => {
@@ -50,7 +50,7 @@ const productsController = {
       const {
         rows: [product]
       } = await productsModel.modelProducts.getProductById(id)
-      client.setEx(`products/${id}`, 60 * 60, JSON.stringify(product))
+      // client.setEx(`products/${id}`, 60 * 60, JSON.stringify(product))
       // commonHellper.responnotdata(product)
       // console.log(product.length === null)
       // if (product === undefined) {
@@ -200,7 +200,7 @@ const productsController = {
     }
     console.log(data)
     const id = req.params.id
-    client.setEx(`products/${id}`, 60 * 60, JSON.stringify(data))
+    // client.setEx(`products/${id}`, 60 * 60, JSON.stringify(data))
     productsModel.modelProducts
       .update({ ...data, id })
       .then(() => {
