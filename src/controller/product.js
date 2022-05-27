@@ -163,7 +163,7 @@ const productsController = {
         color,
         size
       } = req.body
-      console.log(req.get('host'));
+      // console.log(req.get('host'))
       const gambar = req.files.map((file) => {
         return `http://${req.get('host')}/img/${file.filename}`
       })

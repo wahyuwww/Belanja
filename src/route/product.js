@@ -38,8 +38,6 @@ Router.get('/', productsController.getProducts)
   )
   .delete(
     '/:id',
-    protect,
-    isAdmin,
     productsController.deleteProducts
   )
 
