@@ -53,7 +53,7 @@ const modelProducts = {
   },
   filterProduct: ({ search, sort = 'name', type = 'ASC', limit, offset }) => {
     return db.query(
-      `SELECT name,description,price FROM products WHERE ${sort} ILIKE $1 ORDER BY ${sort} ${type} LIMIT $2 OFFSET $3`,
+      `SELECT name,description,price,image,stock FROM products WHERE ${sort} ILIKE $1 ORDER BY ${sort} ${type} LIMIT $2 OFFSET $3`,
       ['%' + search + '%', limit, offset]
     )
   },
