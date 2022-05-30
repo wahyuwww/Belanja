@@ -164,7 +164,8 @@ const productsController = {
         iduser,
         color,
         image,
-        size
+        size,
+        typestock
       } = req.body
       // console.log(req.get('host'))
       // const gambar = req.files.map((file) => {
@@ -180,7 +181,8 @@ const productsController = {
         image,
         iduser,
         color,
-        size
+        size,
+        typestock
       }
       console.log(data)
       await productsModel.modelProducts.insert(data, req.body)
@@ -191,17 +193,27 @@ const productsController = {
     }
   },
   update: (req, res, next) => {
-    const { name, description, stock, price, idcategory, color, size } =
-      req.body
+    const {
+      name,
+      description,
+      stock,
+      price,
+      idcategory,
+      color,
+      size,
+      typestock,
+      image
+    } = req.body
     const data = {
       name,
       description,
       stock,
       price,
       idcategory,
-      image: `http://${req.get('host')}/img/${req.body.image}`,
+      image,
       color,
-      size
+      size,
+      typestock
     }
     console.log(data)
     const id = req.params.id

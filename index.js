@@ -14,7 +14,10 @@ const Router = require('./src/route/index')
 app.use(express.json())
 app.use(morgan('dev'))
 app.use(cors())
-app.use(helmet())
+// app.use(helmet())
+helmet({
+  crossOriginResourcePolicy: false
+})
 app.use(xss())
 app.disable('x-powered-by')
 

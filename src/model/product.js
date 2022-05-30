@@ -29,9 +29,13 @@ const modelProducts = {
   },
   getProductById: (id) => {
     return db.query(
-      'SELECT products.name,category.name AS name_categori, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id WHERE products.id = $1',
+      'SELECT * FROM products WHERE products.id = $1',
       [id]
     )
+    // return db.query(
+    //   'SELECT products.name,category.name AS name_categori, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id WHERE products.id = $1',
+    //   [id]
+    // )
     // return db.query(
     //   'SELECT products.name,category.name AS name_categori, users.store_name AS name_store, description, price, stock FROM products INNER JOIN category ON products.idCategory = category.id INNER JOIN users ON products.iduser = users.id WHERE products.id = $1',
     //   [id]
@@ -47,7 +51,7 @@ const modelProducts = {
       '%' + search + '%'
     ])
   },
-  filterProduct: ({ search, sort, type, limit, offset }) => {
+  filterProduct: ({ search, sort = 'name', type = 'ASC', limit, offset }) => {
     return db.query(
       `SELECT name,description,price FROM products WHERE ${sort} ILIKE $1 ORDER BY ${sort} ${type} LIMIT $2 OFFSET $3`,
       ['%' + search + '%', limit, offset]
@@ -69,11 +73,12 @@ const modelProducts = {
       image,
       iduser,
       size,
-      color
+      color,
+      typestock
     } = body
     return new Promise((resolve, reject) => {
       db.query(
-        'INSERT INTO products (name,description,stock,price,idCategory,image,iduser,size,color) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)',
+        'INSERT INTO products (name,description,stock,price,idCategory,image,iduser,size,color,typestock) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
         [
           name,
           description,
@@ -83,7 +88,8 @@ const modelProducts = {
           image,
           iduser,
           size,
-          color
+          color,
+          typestock
         ],
         (err, result) => {
           if (!err) {
@@ -104,12 +110,13 @@ const modelProducts = {
     image,
     size,
     color,
+    typestock,
     id
   }) => {
     return new Promise((resolve, reject) => {
       db.query(
-        'UPDATE products SET name = $1,  description = $2, stock = $3, price = $4, idcategory = $5, image = $6 ,size=$7,color=$8 WHERE id=$9',
-        [name, description, stock, price, idcategory, image, size, color, id],
+        'UPDATE products SET name = $1,  description = $2, stock = $3, price = $4, idcategory = $5, image = $6 ,size=$7,color=$8,typestock=$9 WHERE id=$10',
+        [name, description, stock, price, idcategory, image, size, color, typestock, id],
         (err, result) => {
           if (!err) {
             resolve(result)
