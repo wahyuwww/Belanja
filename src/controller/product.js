@@ -104,13 +104,17 @@ const productsController = {
           msg: 'data not found'
         })
       }
-      commonHellper.response(
-        res,
-        result.rows,
-        'get filter data success',
-        200,
-        pagination
-      )
+      // commonHellper.response(
+      //   res,
+      //   result.rows,
+      //   'get filter data success',
+      //   200,
+      //   pagination
+      // )
+      res.status(200).json({
+           data : result.rows,
+           pagination
+        })
     } catch (error) {
       console.log(error)
       next(createError)
@@ -165,7 +169,8 @@ const productsController = {
         color,
         image,
         size,
-        typestock
+        typestock,
+        merk
       } = req.body
       // console.log(req.get('host'))
       // const gambar = req.files.map((file) => {
@@ -182,7 +187,8 @@ const productsController = {
         iduser,
         color,
         size,
-        typestock
+        typestock,
+        merk
       }
       console.log(data)
       await productsModel.modelProducts.insert(data, req.body)
@@ -202,6 +208,7 @@ const productsController = {
       color,
       size,
       typestock,
+      merk,
       image
     } = req.body
     const data = {
@@ -213,7 +220,8 @@ const productsController = {
       image,
       color,
       size,
-      typestock
+      typestock,
+      merk
     }
     console.log(data)
     const id = req.params.id

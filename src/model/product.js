@@ -74,11 +74,12 @@ const modelProducts = {
       iduser,
       size,
       color,
-      typestock
+      typestock,
+      merk
     } = body
     return new Promise((resolve, reject) => {
       db.query(
-        'INSERT INTO products (name,description,stock,price,idCategory,image,iduser,size,color,typestock) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
+        'INSERT INTO products (name,description,stock,price,idCategory,image,iduser,size,color,typestock,merk) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)',
         [
           name,
           description,
@@ -89,7 +90,8 @@ const modelProducts = {
           iduser,
           size,
           color,
-          typestock
+          typestock,
+          merk
         ],
         (err, result) => {
           if (!err) {
@@ -111,12 +113,13 @@ const modelProducts = {
     size,
     color,
     typestock,
+    merk,
     id
   }) => {
     return new Promise((resolve, reject) => {
       db.query(
-        'UPDATE products SET name = $1,  description = $2, stock = $3, price = $4, idcategory = $5, image = $6 ,size=$7,color=$8,typestock=$9 WHERE id=$10',
-        [name, description, stock, price, idcategory, image, size, color, typestock, id],
+        'UPDATE products SET name = $1,  description = $2, stock = $3, price = $4, idcategory = $5, image = $6 ,size=$7,color=$8,typestock=$9,merk=$10 WHERE id=$11',
+        [name, description, stock, price, idcategory, image, size, color, typestock,merk, id],
         (err, result) => {
           if (!err) {
             resolve(result)

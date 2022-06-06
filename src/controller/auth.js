@@ -29,14 +29,15 @@ const authController = {
           message: ' data yang anda inputkan salah'
         })
       }
-      if (user.active === '0') {
-        return res.json({
-          message: ' anda belum verifikasi'
-        })
-      }
+      // if (user.active === '0') {
+      //   return res.json({
+      //     message: ' anda belum verifikasi'
+      //   })
+      // }
       delete user.password
       const payload = {
         email: user.email,
+        id: user.id,
         name: user.name,
         role: user.role,
         status: user.active
@@ -45,6 +46,8 @@ const authController = {
       const newRefreshToken = await authHelper.generateRefreshToken(payload)
       const data = {
         email,
+        id: user.id,
+        name: user.name,
         token: user.token,
         refreshToken: newRefreshToken
       }
