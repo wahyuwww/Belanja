@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const generateToken = (payload) => {
   const verify = {
-    expiresIn: 60 * 5,
+    expiresIn: 60 * 90,
     issuer: 'belanja aja'
   }
   const token = jwt.sign(payload, process.env.SECRET_KEY, verify)

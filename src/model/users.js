@@ -84,11 +84,34 @@ const modelUsers = {
       )
     })
   },
-  updateProfil: (body) => {
+  updateProfil: (data) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'UPDATE users SET name = COALESCE($1,name), email = COALESCE($2,email), phonenumber = COALESCE($3,phonenumber), gender = COALESCE($4,gender), date_of_brith = COALESCE($5,date_of_brith), address= COALESCE($6,address),image = COALESCE($7,image)WHERE email = $8\'',
+        [
+          data.name,
+          data.email,
+          data.phonenumber,
+          data.gender,
+          data.image,
+          data.date_of_brith,
+          data.id
+        ],
+        (err, result) => {
+          if (!err) {
+            resolve(result.rows)
+          } else {
+            reject(new Error(err))
+          }
+        }
+      )
+    })
+  },
+  updateProfils: (body) => {
     const { name, email, phonenumber, gender, image, date_of_brith, id } = body
     return new Promise((resolve, reject) => {
       db.query(
-        'UPDATE users SET name = COALESCE($1,name), email = COALESCE($3,email), phonenumber = COALESCE($4,phonenumber), gender = COALESCE($5,gender), date_of_brith = COALESCE($6,date_of_brith), address= COALESCE($7,address),image = COALESCE($8,image)WHERE email = $9',
+        'UPDATE users SET name = COALESCE($1,name), email = COALESCE($2,email), phonenumber = COALESCE($3,phonenumber), gender = COALESCE($4,gender), date_of_brith = COALESCE($5,date_of_brith), address= COALESCE($6,address),image = COALESCE($7,image)WHERE email = $8',
         [name, email, phonenumber, gender, image, date_of_brith, id],
         (err, result) => {
           if (!err) {

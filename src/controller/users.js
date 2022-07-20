@@ -4,6 +4,7 @@ const { modelUsers } = require('../model/users')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
 const jwt = require('jsonwebtoken')
+const cloudinary = require('../helpers/cloudinary')
 
 const usersController = {
   getUsers: async (req, res, next) => {
@@ -176,39 +177,73 @@ const usersController = {
         next(createError)
       })
   },
+  // updateProfil: async (req, res, next) => {
+  //   try {
+  //     const token = req.headers.authorization.split(' ')[1]
+  //     const decoded = await jwt.verify(token, process.env.SECRET_KEY)
+  //     console.log(decoded)
+  //     const {
+  //       name,
+  //       email,
+  //       gender,
+  //       dateofbrith,
+  //       image,
+  //       address,
+  //       password,
+  //       phonenumber
+  //     } = req.body
+  //     const data = {
+  //       name,
+  //       email,
+  //       address,
+  //       password,
+  //       phonenumber,
+  //       gender,
+  //       dateofbrith,
+  //       image
+  //     }
+  //     console.log(data)
+  //     await modelUsers.updateProfil(data)
+  //     const newPayload = {
+  //       email: decoded.email,
+  //       name: decoded.name,
+  //       role: decoded.role
+  //     }
+  //     commonHellper.response(res, newPayload, 'akun done verifikasi', 200)
+  //   } catch (error) {
+  //     console.log(error)
+  //     next(createError)
+  //   }
+  // },
   updateProfil: async (req, res, next) => {
     try {
       const token = req.headers.authorization.split(' ')[1]
-      const decoded = await jwt.verify(token, process.env.SECRET_KEY)
-      console.log(decoded)
-      const {
-        name,
-        email,
-        gender,
-        dateofbrith,
-        image,
-        address,
-        password,
-        phonenumber
-      } = req.body
+      const decoded = jwt.verify(token, process.env.SECRET_KEY)
+      const idUser = decoded.id
+      console.log(idUser)
+      const gambars = req.file.path
+      // console.log(req.file)
+      const ress = await cloudinary.uploader.upload(gambars)
       const data = {
-        name,
-        email,
-        address,
-        password,
-        phonenumber,
-        gender,
-        dateofbrith,
-        image
+        name: req.body.name,
+        email: req.body.email,
+        gender: req.body.gender,
+        dateofbrith: req.body.dateofbrith,
+        image: ress.url,
+        address: req.body.address,
+        password: req.body.password,
+        phonenumber: req.body.phonenumber
       }
       console.log(data)
-      await modelUsers.updateProfil(data)
-      const newPayload = {
-        email: decoded.email,
-        name: decoded.name,
-        role: decoded.role
-      }
-      commonHellper.response(res, newPayload, 'akun done verifikasi', 200)
+      modelUsers
+        .updateProfil({ ...data.idUser })
+        .then(() => {
+          commonHellper.response(res, data, 'data updated success', 200)
+        })
+        .catch((error) => {
+          console.log(error)
+          next(createError)
+        })
     } catch (error) {
       console.log(error)
       next(createError)

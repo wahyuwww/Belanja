@@ -103,7 +103,9 @@ const authController = {
       const data = {
         name: user.name,
         email: user.email,
-        phone_number: user.phonenumber
+        phone_number: user.phonenumber,
+        gender: user.gender,
+        date_of_brith: user.date_of_brith
       }
       delete user.password
       // commonHellper.response(res, user, 'Uppsstt email sudah ada', 200)
