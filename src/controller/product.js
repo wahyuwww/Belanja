@@ -112,9 +112,9 @@ const productsController = {
       //   pagination
       // )
       res.status(200).json({
-           data : result.rows,
-           pagination
-        })
+        data: result.rows,
+        pagination
+      })
     } catch (error) {
       console.log(error)
       next(createError)
