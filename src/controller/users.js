@@ -229,7 +229,7 @@ const usersController = {
         email: req.body.email,
         phonenumber: req.body.phonenumber,
         gender: req.body.gender,
-        ttl: req.body.ttl,
+        date_of_brith: req.body.date_of_brith,
         address: req.body.address,
         image: ress.url,
         id: idUser
