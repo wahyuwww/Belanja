@@ -13,7 +13,7 @@
 
 
 # Introduction
-Belanja is a web-based marketplace application (clothes product). This application allows users to sell their products and also buy existing products. This Blanja application was built using NodeJS and ExpressJS for the backend, and postgresql for the database.
+Belanja is a web-based marketplace application . This application allows users to sell their products and also buy existing products. This Blanja application was built using NodeJS and ExpressJS for the backend, and postgresql for the database.
 
 
 
