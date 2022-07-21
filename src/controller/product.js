@@ -4,16 +4,16 @@ const createError = require('http-errors')
 // const client = require('../config/redis')
 const cloudinary = require('../helpers/cloudinary')
 
-const cloudinaryImageUploadMethod = async (file) => {
-  return new Promise((resolve) => {
-    cloudinary.uploader.upload(file, (err, res) => {
-      if (err) return res.status(500).send('upload image error')
-      resolve({
-        res: res.secure_url
-      })
-    })
-  })
-}
+// const cloudinaryImageUploadMethod = async (file) => {
+//   return new Promise((resolve) => {
+//     cloudinary.uploader.upload(file, (err, res) => {
+//       if (err) return res.status(500).send('upload image error')
+//       resolve({
+//         res: res.secure_url
+//       })
+//     })
+//   })
+// }
 const productsController = {
   getProducts: async (req, res, next) => {
     try {
@@ -182,13 +182,16 @@ const productsController = {
         typestock,
         merk
       } = req.body
-      const urls = []
-      const files = req.files
-      for (const file of files) {
-        const { path } = file
-        const newPath = await cloudinaryImageUploadMethod(path)
-        urls.push(newPath)
-      }
+      // const urls = []
+      // const files = req.files
+      // for (const file of files) {
+      //   const { path } = file
+      //   const newPath = await cloudinaryImageUploadMethod(path)
+      //   urls.push(newPath)
+      // }
+      const gambars = req.file.path
+      // console.log(req.file)
+      const ress = await cloudinary.uploader.upload(gambars)
       // console.log(gambar2)
       const data = {
         name,
@@ -196,7 +199,7 @@ const productsController = {
         stock,
         price,
         idcategory,
-        image: urls.map((url) => url.res),
+        image: ress.url,
         iduser,
         color,
         size,
@@ -223,20 +226,23 @@ const productsController = {
       typestock,
       merk
     } = req.body
-    const urls = []
-    const files = req.files
-    for (const file of files) {
-      const { path } = file
-      const newPath = await cloudinaryImageUploadMethod(path)
-      urls.push(newPath)
-    }
+    // const urls = []
+    // const files = req.files
+    // for (const file of files) {
+    //   const { path } = file
+    //   const newPath = await cloudinaryImageUploadMethod(path)
+    //   urls.push(newPath)
+    // }
+    const gambars = req.file.path
+    // console.log(req.file)
+    const ress = await cloudinary.uploader.upload(gambars)
     const data = {
       name,
       description,
       stock,
       price,
       idcategory,
-      image: urls.map((url) => url.res),
+      image: ress.url,
       color,
       size,
       typestock,
