@@ -13,27 +13,15 @@ Router.get('/', productsController.getProducts)
   .get('/AllProduct', productsController.getAllProducts)
   .get('/filter', productsController.getProductByFilter)
   // .get('/search', productsContoller.productsContoller.getSearchProducts)
-  .get(
-    '/category/:id', productsController.getProductsByCategori
-  )
-  .get(
-    '/:id',
-    productsController.getProductById
-  )
+  .get('/category/:id', productsController.getProductsByCategori)
+  .get('/:id', productsController.getProductById)
   .post(
     '/',
     validate.validate,
-    uploadImg.multipleUpload,
+    uploadImg.singleUpload,
     productsController.insert
   )
-  .put(
-    '/:id',
-    uploadImg.multipleUpload,
-    productsController.update
-  )
-  .delete(
-    '/:id',
-    productsController.deleteProducts
-  )
+  .put('/:id', uploadImg.singleUpload, productsController.update)
+  .delete('/:id', productsController.deleteProducts)
 
 module.exports = Router
