@@ -95,7 +95,7 @@ const modelUsers = {
           data.gender,
           data.image,
           data.address,
-          data.ttl,
+          data.date_of_brith,
           data.id
         ],
         (err, result) => {
