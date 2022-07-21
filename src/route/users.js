@@ -9,7 +9,7 @@ Router.get('/', usersController.getUsers)
   .get('/search', usersController.getSearchUsers)
   .post('/', isAdmin, protect, usersController.createUsers)
   // .put('/:id', usersController.update)
-  .put('/:id', protect, usersController.update)
+  // .put('/:id', protect, usersController.update)
   .put('/updateProfil', uploadImg.singleUpload, usersController.updateProfil)
   .delete('/:id', protect, isAdmin, usersController.deleteUsers)
 module.exports = Router
