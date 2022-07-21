@@ -189,8 +189,8 @@ const productsController = {
       //   const newPath = await cloudinaryImageUploadMethod(path)
       //   urls.push(newPath)
       // }
-      const gambars = req.file.path
-      console.log(req.file)
+      const gambars = req.files[0].path
+      console.log(gambars)
       const ress = await cloudinary.uploader.upload(gambars)
       // console.log(gambar2)
       const data = {
@@ -233,7 +233,7 @@ const productsController = {
     //   const newPath = await cloudinaryImageUploadMethod(path)
     //   urls.push(newPath)
     // }
-    const gambars = req.file.path
+    const gambars = req.files[0].path
     // console.log(req.file)
     const ress = await cloudinary.uploader.upload(gambars)
     const data = {
