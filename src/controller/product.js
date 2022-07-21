@@ -211,7 +211,7 @@ const productsController = {
       next(createError)
     }
   },
-  update: (req, res, next) => {
+  update: async (req, res, next) => {
     const {
       name,
       description,
@@ -221,16 +221,22 @@ const productsController = {
       color,
       size,
       typestock,
-      merk,
-      image
+      merk
     } = req.body
+    const urls = []
+    const files = req.files
+    for (const file of files) {
+      const { path } = file
+      const newPath = await cloudinaryImageUploadMethod(path)
+      urls.push(newPath)
+    }
     const data = {
       name,
       description,
       stock,
       price,
       idcategory,
-      image,
+      image: urls.map((url) => url.res),
       color,
       size,
       typestock,
