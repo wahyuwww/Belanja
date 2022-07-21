@@ -2,7 +2,18 @@ const productsModel = require('../model/product')
 const commonHellper = require('../helpers/common')
 const createError = require('http-errors')
 // const client = require('../config/redis')
+const cloudinary = require('../helpers/cloudinary')
 
+const cloudinaryImageUploadMethod = async (file) => {
+  return new Promise((resolve) => {
+    cloudinary.uploader.upload(file, (err, res) => {
+      if (err) return res.status(500).send('upload image error')
+      resolve({
+        res: res.secure_url
+      })
+    })
+  })
+}
 const productsController = {
   getProducts: async (req, res, next) => {
     try {
@@ -167,15 +178,17 @@ const productsController = {
         idcategory,
         iduser,
         color,
-        image,
         size,
         typestock,
         merk
       } = req.body
-      // console.log(req.get('host'))
-      // const gambar = req.files.map((file) => {
-      //   return `http://${req.get('host')}/img/${file.filename}`
-      // })
+      const urls = []
+      const files = req.files
+      for (const file of files) {
+        const { path } = file
+        const newPath = await cloudinaryImageUploadMethod(path)
+        urls.push(newPath)
+      }
       // console.log(gambar2)
       const data = {
         name,
@@ -183,7 +196,7 @@ const productsController = {
         stock,
         price,
         idcategory,
-        image,
+        image: urls.map((url) => url.res),
         iduser,
         color,
         size,

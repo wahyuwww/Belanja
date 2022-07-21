@@ -96,23 +96,17 @@ const authController = {
   },
   profil: async (req, res, next) => {
     try {
-      const email = req.decoded.email
-      const {
-        rows: [user]
-      } = await authModel.FindEmail(email)
-      const data = {
-        name: user.name,
-        email: user.email,
-        phone_number: user.phonenumber,
-        gender: user.gender,
-        date_of_brith: user.date_of_brith
-      }
-      delete user.password
+      const token = req.headers.authorization.split(' ')[1]
+      const decoded = jwt.verify(token, process.env.SECRET_KEY)
+      const id = decoded.id
+      console.log(id)
+      const result = await authModel.getProfil(id)
+      console.log(result)
       // commonHellper.response(res, user, 'Uppsstt email sudah ada', 200)
       commonHellper.response(
         res,
-        data,
-        `anda berada di profil ${user.name}`,
+        result,
+        'anda berada di profil ',
         200
       )
     } catch (error) {

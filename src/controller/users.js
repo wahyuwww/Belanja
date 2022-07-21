@@ -227,16 +227,16 @@ const usersController = {
       const data = {
         name: req.body.name,
         email: req.body.email,
+        phonenumber: req.body.phonenumber,
         gender: req.body.gender,
-        dateofbrith: req.body.dateofbrith,
-        image: ress.url,
+        ttl: req.body.ttl,
         address: req.body.address,
-        password: req.body.password,
-        phonenumber: req.body.phonenumber
+        image: ress.url,
+        id: idUser
       }
       console.log(data)
       modelUsers
-        .updateProfil({ ...data.idUser })
+        .updateProfil(data)
         .then(() => {
           commonHellper.response(res, data, 'data updated success', 200)
         })

@@ -97,6 +97,21 @@ const authModel = {
         }
       })
     })
+  },
+  getProfil: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query(
+        'SELECT * FROM users WHERE id = $1',
+        [id],
+        (err, result) => {
+          if (!err) {
+            resolve(result.rows)
+          } else {
+            reject(new Error(err))
+          }
+        }
+      )
+    })
   }
   // cekActivasi: ({ active = '1', email }) => {
   //   return db.query('UPDATE users SET active = $1 where email = $2', [active, email])

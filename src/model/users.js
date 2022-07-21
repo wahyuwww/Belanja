@@ -87,14 +87,15 @@ const modelUsers = {
   updateProfil: (data) => {
     return new Promise((resolve, reject) => {
       db.query(
-        'UPDATE users SET name = COALESCE($1,name), email = COALESCE($2,email), phonenumber = COALESCE($3,phonenumber), gender = COALESCE($4,gender), date_of_brith = COALESCE($5,date_of_brith), address= COALESCE($6,address),image = COALESCE($7,image)WHERE email = $8\'',
+        'UPDATE users SET name = COALESCE($1,name), email = COALESCE($2,email), phonenumber = COALESCE($3,phonenumber), gender = COALESCE($4,gender), ttl = COALESCE($5,ttl), address= COALESCE($6,address), image = COALESCE($7,image) WHERE id = $8',
         [
           data.name,
           data.email,
           data.phonenumber,
           data.gender,
           data.image,
-          data.date_of_brith,
+          data.address,
+          data.ttl,
           data.id
         ],
         (err, result) => {
