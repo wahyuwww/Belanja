@@ -190,7 +190,7 @@ const productsController = {
       //   urls.push(newPath)
       // }
       const gambars = req.file.path
-      // console.log(req.file)
+      console.log(req.file)
       const ress = await cloudinary.uploader.upload(gambars)
       // console.log(gambar2)
       const data = {
