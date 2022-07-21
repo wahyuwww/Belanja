@@ -10,6 +10,6 @@ Router.get('/', usersController.getUsers)
   .post('/', isAdmin, protect, usersController.createUsers)
   // .put('/:id', usersController.update)
   // .put('/:id', protect, usersController.update)
-  .put('/updateProfil', uploadImg.singleUpload, usersController.updateProfil)
+  .put('/updateProfil', uploadImg.singleUpload, usersController.updateProfile)
   .delete('/:id', protect, isAdmin, usersController.deleteUsers)
 module.exports = Router
