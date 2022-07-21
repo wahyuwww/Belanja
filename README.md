@@ -22,8 +22,8 @@ Belanja is a web-based marketplace application (clothes product). This applicati
 ## Requirements
 
 1. [Node Js](https://nodejs.org/en/download/)
-2. [Express JS]("https://expressjs.com/en/starter/installing.html")
-3. [Postman]("https://www.getpostman.com/")
+2. [Express JS](https://expressjs.com/en/starter/installing.html)
+3. [Postman](https://www.getpostman.com/)
 4.  Web Server (ex. localhost)
 5.  Code Editor (VS Code, Sublime, Atom, etc)
 
