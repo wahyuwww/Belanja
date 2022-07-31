@@ -129,9 +129,8 @@ GMAIL_OAUTH_TOKEN_EXPIRE= "token expire"
 | `params` | `string` | **Required**. Your API key |
 
 ### Link Rest Api Dokumentasion Postman
-```
 [`Dokumentasi Postman`](https://documenter.getpostman.com/view/10953547/UzdzUm5K)
-```
+
 
 ## Related Project
 
